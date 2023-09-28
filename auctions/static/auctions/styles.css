@@ -1,0 +1,8 @@
+body {
+    padding: 10px;
+}
+
+.img-max {
+    max-width: 300px;
+    background-color: blue;
+}

@@ -1,0 +1,58 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>{{ auction.title }}</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <img src="{{ auction.image }}" alt="{{ auction.title }}">
+
+    <div>
+        Description: <br>
+        {{ auction.description }}
+    </div>
+    <div>
+       Category: {{ category }}
+    </div>
+    <div>
+        {% if auction.active == "Y" %}
+        Status: Active!
+        {% else %}
+        Status: Closed!
+        {% endif %}
+    </div>
+    {% if user.is_authenticated %}
+        {% if watchlist %}
+            <form action="{% url 'listing' auction.pk %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" value="{{ auction.pk }}" name="remove">
+                <input type="submit" value="Remove from watchlist">
+            </form>
+        {% else %}
+            <form action="{% url 'listing' auction.pk %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" value="{{ auction.pk }}" name="add">
+                <input type="submit" value="Add to watchlist">
+            </form>
+        {% endif %}
+    {% endif %}
+
+    {% if auction.user == user %}
+        {% if auction.active == "Y" %}
+            <form action="{% url 'listing' auction.pk %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" value="{{ auction.pk }}" name="active">
+                <input type="submit" value="Close auction">
+            </form>
+        {% else %}
+            <form action="{% url 'listing' auction.pk %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" value="{{ auction.pk }}" name="active">
+                <input type="submit" value="Reopen Auction">
+            </form>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}
